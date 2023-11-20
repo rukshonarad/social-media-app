@@ -1,5 +1,5 @@
-import { userService } from "..services/userService.js";
-
+import { userService } from "../services/user.service.js";
+import { catchAsync } from "../utils/catch-async.js";
 class UserController {
     signUp = catchAsync(async (req, res) => {
         const { body } = req;
@@ -17,3 +17,4 @@ class UserController {
         });
     });
 }
+export const userController = new UserController();
