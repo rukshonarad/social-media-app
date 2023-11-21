@@ -15,9 +15,9 @@ enum AccountStatus {
 model User {
     id                 String        @id @default(auto()) @map("_id") @db.ObjectId
     email              String        @unique
-    preferredFirstName String?
     firstName          String
     lastName           String
+    dateOfBirth        DateTime
     password           String
     status             AccountStatus @default(INACTIVE)
     activationToken    String?

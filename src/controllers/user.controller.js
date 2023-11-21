@@ -6,9 +6,9 @@ class UserController {
 
         const userInput = {
             email: body.email,
-            preferredFirstName: body.preferredName,
             firstName: body.firstName,
             lastName: body.lastName,
+            dateOfBirth: body.dateOfBirth,
             password: body.password
         };
         await userService.signUp(userInput);
