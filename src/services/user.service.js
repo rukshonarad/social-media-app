@@ -24,5 +24,18 @@ class UserService {
 
         await mailer.sendActivationMail(userInput.email, activationToken);
     };
+    login = async (input) => {
+        const user = await prisma.user.findFirst({
+            where: {
+                email: input.email
+            },
+            select: {
+                id: true,
+                status: true,
+                password: true
+            }
+        });
+        if (!user) throw new CustomError("User does not exist", 404);
+    };
 }
 export const userService = new UserService();
