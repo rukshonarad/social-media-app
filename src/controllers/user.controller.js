@@ -9,7 +9,10 @@ class UserController {
             firstName: body.firstName,
             lastName: body.lastName,
             dateOfBirth: body.dateOfBirth,
-            password: body.password
+            password: body.password,
+            country: body.country,
+            education: body.education,
+            workExperience: body.workExperience
         };
         await userService.signUp(userInput);
         res.status(201).json({

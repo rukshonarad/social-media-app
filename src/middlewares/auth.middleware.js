@@ -14,12 +14,10 @@ class AuthMiddleware {
 
         try {
             const payload = jwt.verify(token, process.env.JWT_SECRET);
-            if (payload.adminId) {
-                req.adminId = payload.adminId;
+            if (payload.userId) {
+                req.userId = payload.userId;
             }
-            if (payload.teamMember) {
-                req.teamMember = teamMember.payload.teamMember;
-            }
+
             next();
         } catch (error) {
             throw new CustomError(error.massage, 500);
