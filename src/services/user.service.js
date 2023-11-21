@@ -77,6 +77,35 @@ class UserService {
 
         return token;
     };
+    activate = async (token) => {
+        const hashedActivationToken = crypto.hash(token);
+        const user = await prisma.user.findFirst({
+            where: {
+                activationToken: hashedActivationToken
+            },
+            select: {
+                id: true,
+                activationToken: true
+            }
+        });
+
+        if (!user) {
+            throw new CustomError(
+                "User does not exist with with provided Activation Token",
+                404
+            );
+        }
+
+        await prisma.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                status: "ACTIVE",
+                activationToken: null
+            }
+        });
+    };
 }
 
 export const userService = new UserService();
