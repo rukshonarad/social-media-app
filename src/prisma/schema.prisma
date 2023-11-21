@@ -23,6 +23,11 @@ enum PostType {
     VIDEO
 }
 
+enum FrienshipStatus {
+    FRIEND
+    UNFRIEN
+}
+
 model User {
     id                               String        @id @default(auto()) @map("_id") @db.ObjectId
     email                            String        @unique
@@ -53,6 +58,25 @@ model Post {
 
 model Like {
     id     String  @id @default(auto()) @map("_id") @db.ObjectId
+    // count  Int     @default(autoincrement())
     userId String? @db.ObjectId
     postId String? @db.ObjectId
+}
+
+model Comment {
+    id     String  @id @default(auto()) @map("_id") @db.ObjectId
+    // count  Int     @default(autoincrement())
+    userId String? @db.ObjectId
+    postId String? @db.ObjectId
+}
+
+model Friend {
+    id          String          @id @default(auto()) @map("_id") @db.ObjectId
+    firstName   String
+    lastName    String
+    email       String          @unique
+    password    String?
+    userId      String          @db.ObjectId
+    inviteToken String?
+    status      FrienshipStatus @default(UNFRIEN)
 }
