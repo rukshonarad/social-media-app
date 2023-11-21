@@ -17,7 +17,7 @@ model User {
     email                            String        @unique
     firstName                        String
     lastName                         String
-    dateOfBirth                      DateTime      @default(now())
+    dateOfBirth                      DateTime      @unique @default(now())
     password                         String
     status                           AccountStatus @default(INACTIVE)
     activationToken                  String?
