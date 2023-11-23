@@ -5,7 +5,7 @@ import { date } from "../utils/date.js";
 import { v4 as uuid } from "uuid";
 import jwt from "jsonwebtoken";
 import { mailer } from "../utils/mailer.js";
-
+import { CustomError } from "../utils/custom-error.js";
 class UserService {
     signUp = async (userInput) => {
         const hashedPassword = await bcrypt.hash(userInput.password);
@@ -136,6 +136,48 @@ class UserService {
         });
 
         await mailer.sendPasswordResetToken(email, passwordResetToken);
+    };
+
+    resetPassword = async (token, password) => {
+        const hashedPasswordResetToken = crypto.hash(token);
+        const user = await prisma.user.findFirst({
+            where: {
+                passwordResetToken: hashedPasswordResetToken
+            },
+            select: {
+                id: true,
+                passwordResetToken: true,
+                passwordResetTokenExpirationDate: true
+            }
+        });
+
+        if (!user) {
+            throw new CustomError(
+                "User does not exist with  provided Password Reset Token",
+                404
+            );
+        }
+
+        const currentTime = new Date();
+        const tokenExpDate = new Date(user.passwordResetTokenExpirationDate);
+
+        if (tokenExpDate < currentTime) {
+            throw new CustomError(
+                "Password Reset Token Expired: Request a new one",
+                400
+            );
+        }
+
+        await prisma.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                password: await bcrypt.hash(password),
+                passwordResetToken: null,
+                passwordResetTokenExpirationDate: null
+            }
+        });
     };
 }
 
