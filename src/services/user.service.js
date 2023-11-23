@@ -179,6 +179,65 @@ class UserService {
             }
         });
     };
+    // changePassword = async (newPassword, userId) => {
+    //     const hashedPassword = await bcrypt.hash(newPassword);
+
+    //     await prisma.user.update({
+    //         where: {
+    //             id: userId
+    //         },
+    //         data: {
+    //             password: hashedPassword
+    //         }
+    //     });
+    // };
+    changePassword = async (userId, input) => {
+        const user = await prisma.user.findFirst({
+            where: {
+                id: userId
+            },
+            select: {
+                id: true,
+                password: true
+            }
+        });
+
+        const isPasswordMatches = await bcrypt.compare(
+            input.password,
+            user.password
+        );
+
+        if (!isPasswordMatches) {
+            throw new CustomError("Invalid Credentials", 401);
+        }
+
+        await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                password: await bcrypt.hash(input.newPassword)
+            }
+        });
+    };
+    getMe = async (userId) => {
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+                firstName: true,
+                lastName: true,
+                email: true,
+                id: true,
+                dateOfBirth: true,
+                education: true,
+                currentPlace: true,
+                workExperience: true
+            }
+        });
+        if (!user) throw new CustomError("User does not exist anymore", 404);
+
+        return user;
+    };
 }
 
 export const userService = new UserService();
