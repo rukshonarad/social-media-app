@@ -222,7 +222,9 @@ class UserService {
     };
     getMe = async (userId) => {
         const user = await prisma.user.findUnique({
-            where: { id: userId },
+            where: {
+                id: userId
+            },
             select: {
                 firstName: true,
                 lastName: true,
@@ -237,6 +239,31 @@ class UserService {
         if (!user) throw new CustomError("User does not exist anymore", 404);
 
         return user;
+    };
+    updateProfile = async (userId, userInput) => {
+        const user = await prisma.user.findUnique({
+            where: {
+                id: userId
+            },
+            select: {
+                firstName: true,
+                lastName: true,
+                email: true,
+                dateOfBirth: true,
+                education: true,
+                currentPlace: true,
+                workExperience: true
+            }
+        });
+        await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                ...user,
+                ...userInput
+            }
+        });
     };
 }
 

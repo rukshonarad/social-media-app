@@ -13,5 +13,10 @@ userRouter.patch(
     userController.changePassword
 );
 userRouter.get("/me", authMiddleware.authenticate, userController.getMe);
+userRouter.patch(
+    "/update-profile",
+    authMiddleware.authenticate,
+    userController.updateProfile
+);
 
 export { userRouter };
