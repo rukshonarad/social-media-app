@@ -106,6 +106,37 @@ class UserService {
             }
         });
     };
+    forgotPassword = async (email) => {
+        const user = await prisma.user.findFirst({
+            where: {
+                email
+            },
+            select: {
+                id: true
+            }
+        });
+        if (!user) {
+            throw new CustomError(
+                "User does not exist with provided email",
+                404
+            );
+        }
+
+        const passwordResetToken = crypto.createToken();
+        const hashedPasswordResetToken = crypto.hash(passwordResetToken);
+
+        await prisma.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                passwordResetToken: hashedPasswordResetToken,
+                passwordResetTokenExpirationDate: date.addMinutes(10)
+            }
+        });
+
+        await mailer.sendPasswordResetToken(email, passwordResetToken);
+    };
 }
 
 export const userService = new UserService();
