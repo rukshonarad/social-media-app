@@ -107,7 +107,7 @@ class UserService {
         });
     };
     forgotPassword = async (email) => {
-        const user = await prisma.findFirts({
+        const user = await prisma.user.findFirst({
             where: {
                 email
             },
@@ -125,9 +125,9 @@ class UserService {
         const passwordResetToken = crypto.createToken();
         const hashedPasswordResetToken = crypto.hash(passwordResetToken);
 
-        await prisma.admin.update({
+        await prisma.user.update({
             where: {
-                id: admin.id
+                id: user.id
             },
             data: {
                 passwordResetToken: hashedPasswordResetToken,
