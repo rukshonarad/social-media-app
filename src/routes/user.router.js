@@ -12,4 +12,6 @@ userRouter.patch(
     authMiddleware.authenticate,
     userController.changePassword
 );
+userRouter.get("/me", authMiddleware.authenticate, userController.getMe);
+
 export { userRouter };

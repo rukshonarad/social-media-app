@@ -220,6 +220,24 @@ class UserService {
             }
         });
     };
+    getMe = async (userId) => {
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+                firstName: true,
+                lastName: true,
+                email: true,
+                id: true,
+                dateOfBirth: true,
+                education: true,
+                currentPlace: true,
+                workExperience: true
+            }
+        });
+        if (!user) throw new CustomError("User does not exist anymore", 404);
+
+        return user;
+    };
 }
 
 export const userService = new UserService();
