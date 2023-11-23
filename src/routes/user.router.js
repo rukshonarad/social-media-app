@@ -6,6 +6,6 @@ userRouter.post("/sign-up", userController.signUp);
 userRouter.post("/login", userController.login);
 userRouter.get("/activate", userController.activate);
 userRouter.patch("/forgot-password", userController.forgotPassword);
-// userRouter.patch("/reset-password", userController.resetPassword);
-
+userRouter.patch("/reset-password", userController.resetPassword);
+userRouter.patch("/change-password", userController.changePassword);
 export { userRouter };
