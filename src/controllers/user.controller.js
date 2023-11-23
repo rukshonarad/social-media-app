@@ -92,5 +92,53 @@ class UserController {
             message: "Password successfully updated"
         });
     });
+    changePassword = catchAsync(async (req, res) => {
+        const { body } = req;
+        const input = {
+            password: body.password,
+            newPassword: body.newPassword,
+            newPasswordConfirm: body.newPasswordConfirm
+        };
+
+        if (!body.password || !body.newPassword || !body.newPasswordConfirm)
+            throw new CustomError(
+                "All fields are required: Current Password, New Password and New Password Confirmation",
+                400
+            );
+
+        if (body.newPassword !== body.newPasswordConfirm)
+            throw new CustomError(
+                "Password and Password Confirm does not match",
+                400
+            );
+
+        await userService.changePassword(req.userId, input);
+
+        res.status(200).json({
+            message: "Password successfully updated!"
+        });
+    });
+    // changePassword = catchAsync(async (req, res) => {
+    //     const {
+    //         body: { newPassword, newPasswordConfirm }
+    //     } = req;
+    //     if (!newPassword || !newPasswordConfirm) {
+    //         throw new CustomError(
+    //             "All Password and Pasword Confirmation are required",
+    //             400
+    //         );
+    //     }
+    //     if (newPassword !== newPasswordConfirm) {
+    //         throw new CustomError(
+    //             "Password and Password Confirmation does not match",
+    //             400
+    //         );
+    //     }
+
+    //     await userService.changePassword(newPassword, req.userId);
+    //     res.status(200).json({
+    //         message: "Password successfully updated"
+    //     });
+    // });
 }
 export const userController = new UserController();
