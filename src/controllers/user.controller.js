@@ -148,5 +148,31 @@ class UserController {
             data: me
         });
     });
+
+    updateProfile = catchAsync(async (req, res) => {
+        const {
+            email,
+            firstName,
+            lastName,
+            currentPlace,
+            education,
+            workExperience
+        } = req.body;
+
+        const userInput = {
+            email,
+            firstName,
+            lastName,
+            currentPlace,
+            education,
+            workExperience
+        };
+
+        await userService.updateProfile(req.userId, userInput);
+
+        res.status(200).json({
+            message: "Profile was updated successfully!"
+        });
+    });
 }
 export const userController = new UserController();
