@@ -168,7 +168,7 @@ class UserController {
             workExperience
         };
 
-        await userService.updateProfile(userInput, req.userId);
+        await userService.updateProfile(req.userId, userInput);
 
         res.status(200).json({
             message: "Profile was updated successfully!"
