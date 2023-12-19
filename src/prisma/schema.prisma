@@ -76,7 +76,7 @@ type Content {
 
 model Post {
     id         String        @id @default(auto()) @map("_id") @db.ObjectId
-    content    Content
+    content    String
     visibility PostVisibilty @default(PUBLIC)
     userId     String?       @db.ObjectId
     likeCount  Int           @default(0)
